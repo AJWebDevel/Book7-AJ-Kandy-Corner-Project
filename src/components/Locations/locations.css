@@ -1,0 +1,11 @@
+.stores {
+    display: flex;
+    flex-direction: column;
+}
+
+.store {
+    background-color: lavender;
+    border: 1px dotted darkmagenta;
+    padding: 0.7rem;
+    margin: .5rem 0;
+}
