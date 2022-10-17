@@ -38,7 +38,7 @@ export const ProductsList = () => {
                 setFiltered(products)
             }
         },
-        [mostExpensive]
+        [products, mostExpensive]
     )
 
 
