@@ -1,5 +1,5 @@
-import { UseEffect, useState } from "react"
-import { Navigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 
 export const CreateProductForm = () => {
@@ -7,15 +7,15 @@ export const CreateProductForm = () => {
         TODO: Add the correct default properties to the
         initial state object
         */
-    const makeCounter = () => {
-        var i = 0;
-        return function () {
-            return i++;
-        }
-    }
-    let counter = makeCounter()
+
+
+
+    const navigate = useNavigate()
+
     const [product, update] = useState({
-        id: counter
+        name: "",
+        typeId: 0,
+        pricePerUnit: 0
     })
     const [types, setTypes] = useState([])
     /*
@@ -29,26 +29,22 @@ export const CreateProductForm = () => {
 
 
 
+    useEffect(
+        () => {
+
+            fetch(`http://localhost:8088/types`)
+                .then((res) => res.json())
+                .then((typeArray) => {
+                    setTypes(typeArray)
+                })
+        },
+        //empty dependency array watches for initial change
+        [] // When this array is empty, you are observing initial component state
+    )
     const handleSaveButtonClick = (event) => {
         event.preventDefault()
         // TODO: Create the object to be saved to the API
-        UseEffect(
-            () => {
 
-                fetch(`http://localhost:8088/types`)
-                    .then((res) => res.json())
-                    .then((typeArray) => {
-                        setTypes(typeArray)
-                    })
-            },
-            //empty dependency array watches for initial change
-            [] // When this array is empty, you are observing initial component state
-        )
-        const productToSendToAPI = {
-            name: product.name,
-            typeId: product.type.id,
-            pricePerUnit: product.pricePerUnit
-        }
 
         // TODO: Perform the fetch() to POST the object to the API
         return fetch(`http://localhost:8088/products?_expand=type&_sort=name`, {
@@ -56,11 +52,11 @@ export const CreateProductForm = () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(productToSendToAPI)
+            body: JSON.stringify(product)
         })
             .then(res => res.json)
             .then(() => {
-                Navigate("/products")
+                navigate("/productsList")
             })
     }
 
@@ -75,7 +71,7 @@ export const CreateProductForm = () => {
                         type="text"
                         className="form-control"
                         placeholder="Name Product"
-                        value={product.id}
+                        value={product.name}
                         onChange={
                             (event) => {
                                 const copy = { ...product }
@@ -86,18 +82,31 @@ export const CreateProductForm = () => {
                 </div>
             </fieldset>
             <fieldset>
-                <div className="form-group">
 
-                    {types.map(
-                        (type) => {
-                            return (<select className="type">
-                                <option value={type.id}>{type.name}</option>
-                            </select>)
-                        }
-                    )
-
+                {types.map(
+                    (type) => {
+                        return <div className="form-group">
+                            <label key={type.id} htmlFor="type">{type.typeName}:
+                                <input
+                                    required autoFocus
+                                    type="radio"
+                                    name="type"
+                                    className={`type-picker ${type.id}`}
+                                    placeholder="Pick Product Type"
+                                    value={type.id}
+                                    onChange={
+                                        (event) => {
+                                            const copy = { ...product }
+                                            copy.typeId = parseInt(event.target.value)
+                                            update(copy)
+                                        }
+                                    } />
+                            </label>
+                        </div>
                     }
-                </div>
+                )
+
+                }
             </fieldset>
             <fieldset>
                 <div className="form-group">
@@ -111,7 +120,7 @@ export const CreateProductForm = () => {
                         onChange={
                             (event) => {
                                 const copy = { ...product }
-                                copy.name = event.target.value
+                                copy.pricePerUnit = parseInt(event.target.value)
                                 update(copy)
                             }
                         } />
