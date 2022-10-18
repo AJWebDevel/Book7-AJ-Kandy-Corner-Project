@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import "./productList.css"
 
 
-export const ProductsList = () => {
+export const ProductsList = ({ searchTermsState }) => {
     const [products, setProducts] = useState([])
     const [filteredProducts, setFiltered] = useState([])
     const [mostExpensive, setMostExpensive] = useState(false)
@@ -13,6 +13,8 @@ export const ProductsList = () => {
     const navigate = useNavigate()
     const localKandyUser = localStorage.getItem("kandy_user")
     const kandyUserObj = JSON.parse(localKandyUser)
+
+
 
     useEffect(
         () => {
@@ -41,6 +43,26 @@ export const ProductsList = () => {
         [products, mostExpensive]
     )
 
+    useEffect(
+        () => {
+            const searchedProducts = products.filter(product => {
+                return product.name.toLowerCase().startsWith(searchTermsState.toLowerCase())
+            })
+            setFiltered(searchedProducts)
+            {
+                filteredProducts.map(
+                    (product) => {
+                        return (<section className="product">
+                            <header>{product.name}</header>
+                            <footer>Price: ${product.pricePerUnit}</footer>
+                        </section>)
+                    }
+                )
+
+            }
+        },
+        [searchTermsState]
+    )
 
 
 
@@ -58,17 +80,29 @@ export const ProductsList = () => {
         }
         <h2>List of Products</h2>
         <article className="products">
-            {filteredProducts.map(
-                (product) => {
-                    return (<section className="product">
-                        <header>{product.name}</header>
-                        {product.type.typeName}
-                        <footer>Price: ${product.pricePerUnit}</footer>
-                    </section>)
-                }
-            )
 
-            }
+            {setFiltered === searchedProducts
+                ? <>
+                    filteredProducts.map(
+                    (product) => {
+                        (<section className="product">
+                            <header>{product.name}</header>
+                            <footer>Price: ${product.pricePerUnit}</footer>
+                        </section>)
+                    }
+                    )
+                </>
+                : <>
+                    {
+                        filteredProducts.map(
+                            (product) => {
+                                return (<section className="product">
+                                    <header>{product.name}</header>
+                                    {product.type.typeName}
+                                    <footer>Price: ${product.pricePerUnit}</footer>
+                                </section>)
+                    </>
+
         </article>
     </>
 }
