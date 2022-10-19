@@ -11,11 +11,12 @@ export const EmployeeNav = () => {
                 <Link className="navbar__link" to="/locations">Locations</Link>
             </li>
             <li className="navbar__item active">
-                <Link className="navbar__link" to="/productsList">Products</Link>
+                <Link className="navbar__link" to="/products">Products</Link>
             </li>
             <li className="navbar__item active">
-                <Link className="navbar__link" to="/CreateProductForm">Create New Product</Link>
+                <Link className="navbar__link" to="/employees">Employees</Link>
             </li>
+
             <li className="navbar__item navbar__logout">
                 <Link className="navbar__link" to="" onClick={() => {
                     localStorage.removeItem("kandy_user")

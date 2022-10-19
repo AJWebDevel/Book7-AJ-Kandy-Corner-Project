@@ -1,6 +1,9 @@
 import { useState } from "react"
 import { ProductsList } from "./productsList"
 import { ProductSearch } from "./productSearch"
+import { CreateProductForm } from "./createProductForm"
+import { useNavigate } from "react-router-dom"
+
 
 
 export const ProductContainer = () => {
@@ -9,5 +12,7 @@ export const ProductContainer = () => {
     return <>
         <ProductSearch setterFunction={setSearchTerms} />
         <ProductsList searchTermsState={searchTerms} />
+        <CreateProductForm />
+
     </>
 }

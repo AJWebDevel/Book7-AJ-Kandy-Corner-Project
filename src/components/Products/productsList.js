@@ -49,19 +49,9 @@ export const ProductsList = ({ searchTermsState }) => {
                 return product.name.toLowerCase().startsWith(searchTermsState.toLowerCase())
             })
             setFiltered(searchedProducts)
-            {
-                filteredProducts.map(
-                    (product) => {
-                        return (<section className="product">
-                            <header>{product.name}</header>
-                            <footer>Price: ${product.pricePerUnit}</footer>
-                        </section>)
-                    }
-                )
 
-            }
         },
-        [searchTermsState]
+        [searchTermsState, products]
     )
 
 
@@ -81,27 +71,22 @@ export const ProductsList = ({ searchTermsState }) => {
         <h2>List of Products</h2>
         <article className="products">
 
-            {setFiltered === searchedProducts
-                ? <>
-                    filteredProducts.map(
+            {
+                filteredProducts.map(
                     (product) => {
-                        (<section className="product">
+                        return (<section className="product">
                             <header>{product.name}</header>
-                            <footer>Price: ${product.pricePerUnit}</footer>
+                            {searchTermsState === ""
+                                ? <>{product.type.typeName}
+                                    <footer>Price: ${product.pricePerUnit}</footer>
+                                </>
+                                : <footer>Price: ${product.pricePerUnit}</footer>
+
+                            }
                         </section>)
                     }
-                    )
-                </>
-                : <>
-                    {
-                        filteredProducts.map(
-                            (product) => {
-                                return (<section className="product">
-                                    <header>{product.name}</header>
-                                    {product.type.typeName}
-                                    <footer>Price: ${product.pricePerUnit}</footer>
-                                </section>)
-                    </>
+                )
+            }
 
         </article>
     </>
