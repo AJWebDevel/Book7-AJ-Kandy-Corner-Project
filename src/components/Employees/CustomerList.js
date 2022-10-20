@@ -1,11 +1,13 @@
 
+
+
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 
 
-export const EmployeeList = () => {
-    const [employees, setEmployees] = useState([])
+export const CustomerList = () => {
+    const [customers, setCustomers] = useState([])
 
 
     const navigate = useNavigate()
@@ -17,10 +19,10 @@ export const EmployeeList = () => {
     useEffect(
         () => {
 
-            fetch(`http://localhost:8088/employees?_expand=user`)
+            fetch(`http://localhost:8088/customers?_expand=user`)
                 .then((res) => res.json())
-                .then((employeeArray) => {
-                    setEmployees(employeeArray)
+                .then((customerArray) => {
+                    setCustomers(customerArray)
                 })
         },
         //empty dependency array watches for initial change
@@ -30,16 +32,16 @@ export const EmployeeList = () => {
 
     return <>
 
-        <h2>Employees</h2>
+        <h2>Customers</h2>
 
         <article className="employees">
 
             {
-                employees.map(
-                    (employee) => {
-                        return (<section className="employee">
-                            <header>{employee?.user?.fullName}</header>
-                            <footer>Pay Rate: ${employee.payRate}</footer>
+                customers.map(
+                    (customer) => {
+                        return (<section className="customers">
+                            <header>{customer?.user?.fullName}</header>
+                            <footer>Email: {customer?.user?.email}</footer>
                         </section>)
                     }
                 )

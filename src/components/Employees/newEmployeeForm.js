@@ -37,48 +37,34 @@ export const NewEmployeeForm = () => {
     const Navigate = useNavigate()
     /*save button click event function here
         //put employee send obj and fetch-POST here */
-    const handleSubmitButtonClick = (event) => {
+    const handleSubmitButtonClick = async (event) => {
         event.preventDefault()
 
-        const userToSendToAPI = {
-            fullName: user.fullName,
-            email: user.email,
-            isStaff: true
-        }
 
         // TODO: Perform the fetch() to POST the object to the API
 
-        fetch(`http://localhost:8088/users`, {
+        await fetch(`http://localhost:8088/users`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(userToSendToAPI)
-        })
-            .then(res => res.json)
-            .then((usersArray) => {
-                setUsers(usersArray)
+            body: JSON.stringify(user)
+        }).then(response => response.json())
+            .then((response) => {
+                employee.userId = response.id
             })
-            .then(() =>
-                fetch(`http://localhost:8088/employees`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(employeeToSendToAPI)
-                })
-                    .then(res => res.json)
-                    .then(() => {
-                        setEmployees(employees)
-                        Navigate("/employees")
-                    }))
+        await fetch(`http://localhost:8088/employees`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(employee)
+        })
+            .then(() => {
+                Navigate("/employees")
+            })
 
 
-        const employeeToSendToAPI = {
-            locationId: employee.locationId,
-            StartDate: employee.startDate,
-            payRate: employee.payRate
-        }
 
         // TODO: Perform the fetch() to POST the object to the API
 
@@ -110,19 +96,24 @@ export const NewEmployeeForm = () => {
             </fieldset>
             <fieldset>
                 <div>
-                    <label>Location</label>
-
-
-                    {locations.map(
-                        (location) => {
-                            return (<select className="location">
-                                <option value={location.id}>{location.name}</option>
-                            </select>)
+                    <select className="locations" id="locations"
+                        onChange={
+                            (event) => {
+                                const copy = { ...employee }
+                                copy.locationId = event.target.value
+                                setEmployee(copy)
+                            }
+                        }>
+                        <option value="">Choose</option>
+                        {locations.map(
+                            (location) => {
+                                return (
+                                    <option value={location.id}>{location.name}</option>)
+                            }
+                        )
                         }
-                    )
+                    </select>
 
-                    }
-                    <input />
                 </div>
             </fieldset>
             <fieldset>
