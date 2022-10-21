@@ -2,7 +2,7 @@
 
 
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 
 
@@ -34,13 +34,14 @@ export const CustomerList = () => {
 
         <h2>Customers</h2>
 
-        <article className="employees">
+        <article className="customers">
 
             {
                 customers.map(
                     (customer) => {
                         return (<section className="customers">
-                            <header>{customer?.user?.fullName}</header>
+                            <header><Link to={`/customers/${customer.userId}`}> {customer?.user?.fullName}</Link> </header>
+
                             <footer>Email: {customer?.user?.email}</footer>
                         </section>)
                     }
